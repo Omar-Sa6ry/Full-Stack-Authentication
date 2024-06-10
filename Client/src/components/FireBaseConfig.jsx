@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app'
 
+const clientId = process.env.CLIENTID
+
 const firebaseConfig = {
-  apiKey: 'AIzaSyCzZaXgjnB0iUyWgyORAwknqZnzux8WOcU',
+  apiKey: clientId,
   authDomain: 'omar-sabry.firebaseapp.com',
   projectId: 'omar-sabry',
   storageBucket: 'omar-sabry.appspot.com',

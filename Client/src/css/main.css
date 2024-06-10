@@ -1,6 +1,23 @@
 .error {
   padding: 0 10px;
   width: 100%;
-  color: var(--red-color);
+  color: red;
   font-size: 13px;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.br-50 {
+  border-radius: 50%;
+}
+.goToProfile {
+  position: relative;
+  top: 34%;
+  right: -9%;
+}
+:where(.css-dev-only-do-not-override-3rel02).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+  background-color: transparent;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }

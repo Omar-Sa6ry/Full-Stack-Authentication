@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { app } from '../components/FireBaseConfig'
@@ -14,7 +14,7 @@ import {
   TwitterAuthProvider,
   getAuth,
   signInWithPopup,
-  GithubAuthProvider,
+  GithubAuthProvider
 } from 'firebase/auth'
 
 let schema = yup.object().shape({
@@ -34,15 +34,15 @@ const Login = () => {
   const authState = useSelector(state => state)
   const { isSuccess, isLoading } = authState?.auth
 
-  // let getTokenFromLocalStorage = JSON.parse(
-  //   localStorage?.getItem('customer')
-  // )?.token
-
-  // useEffect(() => {
-  //   if (getTokenFromLocalStorage) {
-  //     navigate('/')
-  //   }
-  // }, [getTokenFromLocalStorage])
+  let getTokenFromLocalStorage = JSON.parse(
+    localStorage?.getItem('customer')
+  )?.token
+  
+  useEffect(() => {
+    if (getTokenFromLocalStorage) {
+      navigate('/')
+    }
+  }, [getTokenFromLocalStorage])
 
   const googleAuth = async () => {
     try {
@@ -87,8 +87,6 @@ const Login = () => {
     }
   }
 
-  
-
   const gitHubAuth = async () => {
     try {
       const provider = new GithubAuthProvider()
@@ -112,9 +110,6 @@ const Login = () => {
     validationSchema: schema,
     onSubmit: async values => {
       dispatch(login(values))
-      if (isSuccess) {
-        navigate('/')
-      }
     }
   })
 
@@ -137,7 +132,7 @@ const Login = () => {
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
-          <form className='space-y-6' action='#' method='POST'>
+          <form className='space-y-6' onSubmit={formik.handleSubmit}>
             <InputCustom
               label='Email'
               id='email'

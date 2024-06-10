@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { forgotPassword } from '../features/user/userSlice'
@@ -21,15 +21,15 @@ const ForgotPassword = () => {
   const authState = useSelector(state => state)
   const { isSuccess, isLoading } = authState?.auth
 
-  // let getTokenFromLocalStorage = JSON.parse(
-  //   localStorage?.getItem('customer')
-  // )?.token
+  let getTokenFromLocalStorage = JSON.parse(
+    localStorage?.getItem('customer')
+  )?.token
 
-  // useEffect(() => {
-  //   if (getTokenFromLocalStorage) {
-  //     navigate('/')
-  //   }
-  // }, [getTokenFromLocalStorage])
+  useEffect(() => {
+    if (getTokenFromLocalStorage) {
+      navigate('/')
+    }
+  }, [getTokenFromLocalStorage])
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -55,7 +55,7 @@ const ForgotPassword = () => {
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
-          <form className='space-y-6' action='#' method='POST'>
+          <form className='space-y-6' onSubmit={formik.handleSubmit}>
             <InputCustom
               label='Email'
               id='email'

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { app } from '../components/FireBaseConfig'
 import { useFormik } from 'formik'
+import { register } from '../features/user/userSlice'
 import Buttons from '../components/ButtonsAuth/Buttons'
 import InputCustom from '../components/InputCustom'
 import * as yup from 'yup'
@@ -15,7 +16,6 @@ import {
   signInWithPopup,
   GithubAuthProvider
 } from 'firebase/auth'
-import { register } from '../features/user/userSlice'
 
 let schema = yup.object().shape({
   firstname: yup.string().required('First Name is Required'),
@@ -36,15 +36,16 @@ const Register = () => {
   const authState = useSelector(state => state)
   const { isSuccess, isLoading } = authState?.auth
 
-  // let getTokenFromLocalStorage = JSON.parse(
-  //   localStorage?.getItem('customer')
-  // )?.token
+  console.log(authState)
+  let getTokenFromLocalStorage = JSON.parse(
+    localStorage?.getItem('customer')
+  )?.token
 
-  // useEffect(() => {
-  //   if (getTokenFromLocalStorage) {
-  //     navigate('/')
-  //   }
-  // }, [getTokenFromLocalStorage])
+  useEffect(() => {
+    if (getTokenFromLocalStorage) {
+      navigate('/')
+    }
+  }, [getTokenFromLocalStorage])
 
   const googleAuth = async () => {
     try {
@@ -151,7 +152,7 @@ const Register = () => {
 
       <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
-          <form className='space-y-6' action='#' method='POST'>
+          <form className='space-y-6' onSubmit={formik.handleSubmit}>
             <InputCustom
               label='First Name'
               id='firstname'

@@ -296,13 +296,6 @@ const deleteClientUser = asyncHandler(async (req, res, next) => {
       )
       return next(error)
     } else {
-      const listing = await Estate?.find({ owner: _id })
-
-      if (listing) {
-        for (let i = 0; i < listing?.length; i++) {
-          const deleteListing = await Estate?.findOneAndDelete({ owner: _id })
-        }
-      }
       const deleteUser = await User.findByIdAndDelete(_id)
       if (deleteUser) {
         res.clearCookie('token')
