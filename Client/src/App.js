@@ -5,6 +5,8 @@ import './css/main.css'
 
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
 // import { OpenRoutes } from './routing/OpenRoutes'
 
 function App () {
@@ -13,16 +15,24 @@ function App () {
       <BrowserRouter>
         <Routes>
           <Route path='/login' element={<Login />} />
-          {/* <Route path='/forget-password' element={<ForgetPassword />} /> */}
+          <Route path='/forget-password' element={<ForgotPassword />} />
           <Route path='/' element={<Home />} />
-          {/* <Route
+          <Route
             path='/register'
             element={
-              <OpenRoutes>
-                <Register />
-              </OpenRoutes>
+              // <OpenRoutes>
+              <Register />
+              // </OpenRoutes>
             }
-          /> */}
+          />
+          <Route
+            path='/forgotPassword'
+            element={
+              // <OpenRoutes>
+              <ForgotPassword />
+              // </OpenRoutes>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

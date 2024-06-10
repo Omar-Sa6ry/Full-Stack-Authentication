@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { base_url } from '../../utils/base_url'
-import { config } from '../../utils/ConfigAxios'
+import { base_url } from '../../constant/base_url'
 
-const register = async user => {
-  const response = await axios.post(`${base_url}user/register`, user)
+const register = async userData => {
+  console.log("gnkn")
+  const response = await axios.post(`${base_url}user/register`, userData)
   if (response.data) {
     localStorage.setItem('customer', JSON.stringify(response.data))
   }

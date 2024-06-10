@@ -6,7 +6,6 @@ import { useFormik } from 'formik'
 import Buttons from '../components/ButtonsAuth/Buttons'
 import InputCustom from '../components/InputCustom'
 import * as yup from 'yup'
-import { login } from '../features/user/userSlice'
 import ButtonCustom from '../components/ButtonCustom'
 import {
   GoogleAuthProvider,
@@ -14,10 +13,13 @@ import {
   TwitterAuthProvider,
   getAuth,
   signInWithPopup,
-  GithubAuthProvider,
+  GithubAuthProvider
 } from 'firebase/auth'
+import { register } from '../features/user/userSlice'
 
 let schema = yup.object().shape({
+  firstname: yup.string().required('First Name is Required'),
+  lastname: yup.string().required('Last Name is Required'),
   email: yup
     .string()
     .email('Email should be valid')
@@ -25,7 +27,7 @@ let schema = yup.object().shape({
   password: yup.string().required('Password is Required')
 })
 
-const Login = () => {
+const Register = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -52,7 +54,10 @@ const Login = () => {
       const result = await signInWithPopup(auth, provider)
 
       await setDataAuth({
-        email: result?.user?.email
+        firstname: result?._tokenResponse?.firstName,
+        lastname: result?._tokenResponse?.lastName,
+        email: result?.user?.email,
+        avatar: result?.user?.photoURL
       })
     } catch (err) {
       console.log(err)
@@ -66,7 +71,10 @@ const Login = () => {
       const result = await signInWithPopup(auth, provider)
 
       await setDataAuth({
-        email: result?.user?.email
+        firstname: result?._tokenResponse?.firstName,
+        lastname: result?._tokenResponse?.lastName,
+        email: result?.user?.email,
+        avatar: result?.user?.photoURL
       })
     } catch (err) {
       console.log(err)
@@ -78,25 +86,29 @@ const Login = () => {
       const provider = new TwitterAuthProvider()
       const auth = getAuth(app)
       const result = await signInWithPopup(auth, provider)
-      console.log(result)
+
       await setDataAuth({
-        email: result?.user?.email
+        firstname: result?.user?.displayName.split(' ')[0],
+        lastname: result?.user?.displayName.split(' ')[1],
+        email: result?.user?.email,
+        avatar: result?.user?.photoURL
       })
     } catch (err) {
       console.log(err)
     }
   }
 
-  
-
   const gitHubAuth = async () => {
     try {
       const provider = new GithubAuthProvider()
       const auth = getAuth(app)
       const result = await signInWithPopup(auth, provider)
-      console.log(result)
+
       await setDataAuth({
-        email: result?.user?.email
+        firstname: result?.user?.displayName.split(' ')[0],
+        lastname: result?.user?.displayName.split(' ')[1],
+        email: result?.user?.email,
+        avatar: result?.user?.photoURL
       })
     } catch (err) {
       console.log(err)
@@ -106,12 +118,14 @@ const Login = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      firstname: dataAuth?.firstname || '',
+      lastname: dataAuth?.lastname || '',
       email: dataAuth?.email || '',
       password: ''
     },
     validationSchema: schema,
     onSubmit: async values => {
-      dispatch(login(values))
+      dispatch(register(values))
       if (isSuccess) {
         navigate('/')
       }
@@ -122,15 +136,15 @@ const Login = () => {
     <div className='min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
         <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
-          Sign in to your account
+          Sign up to your account
         </h2>
         <p className='mt-2 text-center text-sm text-gray-600 max-w'>
           Or
           <Link
-            to='/register'
+            to='/login'
             className='font-medium text-blue-600 hover:text-blue-500'
           >
-            create an account
+            Login to your account
           </Link>
         </p>
       </div>
@@ -139,6 +153,34 @@ const Login = () => {
         <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
           <form className='space-y-6' action='#' method='POST'>
             <InputCustom
+              label='First Name'
+              id='firstname'
+              name='firstname'
+              type='text'
+              value={formik?.values?.firstname}
+              onChange={formik?.handleChange('firstname')}
+              onBlur={formik?.handleBlur('firstname')}
+              placeholder='Enter your First Name...'
+            />
+            <div className='error'>
+              {formik.touched.firstname && formik.errors.firstname}
+            </div>
+
+            <InputCustom
+              label='Last Name'
+              id='lastname'
+              name='lastname'
+              type='text'
+              value={formik?.values?.lastname}
+              onChange={formik?.handleChange('lastname')}
+              onBlur={formik?.handleBlur('lastname')}
+              placeholder='Enter your last Name...'
+            />
+            <div className='error'>
+              {formik.touched.lastname && formik.errors.lastname}
+            </div>
+
+            <InputCustom
               label='Email'
               id='email'
               name='email'
@@ -146,7 +188,6 @@ const Login = () => {
               value={formik?.values?.email}
               onChange={formik?.handleChange('email')}
               onBlur={formik?.handleBlur('email')}
-              // autocomplete='email'
               placeholder='Enter your email address...'
             />
             <div className='error'>
@@ -167,19 +208,8 @@ const Login = () => {
               {formik.touched.password && formik.errors.password}
             </div>
 
-            <div className='flex items-center justify-end'>
-              <div className='text-sm'>
-                <Link
-                  to='/forgotPassword'
-                  className='font-medium text-red-600 hover:text-red-500'
-                >
-                  Forgot your password
-                </Link>
-              </div>
-            </div>
-
             <ButtonCustom
-              label={'Sign in'}
+              label={'Sign up'}
               isLoading={isLoading}
               disabled={isLoading}
             />
@@ -208,4 +238,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register
